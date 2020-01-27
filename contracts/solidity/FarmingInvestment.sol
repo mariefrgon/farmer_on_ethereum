@@ -6,27 +6,49 @@ contract mortal {
     function kill() public { if (msg.sender == owner) selfdestruct(owner); }
 }
 
-contract broutille is mortal {
-    uint counter;
+contract farminginvestment is mortal {
+
+    struct Investor{
+        uint investedAmount;
+        address payable id;
+    }
+
+    address payable cowBreeder;
+    address payable farmer;
+
+    uint milkPrice;
+
+
+    uint collectedAmount;
+    uint goalAmount;
+    uint limitDate;
+    boolean cowsBought;
+
+    constructor(address payable _cowBreeder, uint _goalAmount, uint _milkPrice, uint duration) public{
+        farmer = msg.sender;
+
+        cowBreeder = _cowBreeder;
+        milkPrice = _milkPrice;
+        collectedAmount = 0;
+        goalAmount = _goalAmount;
+        limitDate = now + duration;
+
+        cowsBought = false;
+
+    }
 
 // https://solidity.readthedocs.io/en/develop/miscellaneous.html?highlight=Pure
-    function caress() public view returns (string) {
+    function invest(uint amount) public view returns (boolean) {
 
-            if(counter < 1)
-            {
-                return "HmmmrPurr!?";
-            }
-            if(counter < 3)
-            {
-                return "MiauHmmmrrr! <3 <3 <3";
-            }
-            else
-            {
-                return "BEURK!!! :-X";
-            }
 	}
 
-    function offerYoghurt() public {
-        ++counter;
+    function buyCows () returns (boolean) {
     }
+
+    function buyMilk(uint quantity) returns (boolean) public {
+
+    }
+
+
+
 }
