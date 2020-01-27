@@ -36,8 +36,37 @@ contract farminginvestment is mortal {
 
     }
 
-// https://solidity.readthedocs.io/en/develop/miscellaneous.html?highlight=Pure
-    function invest(uint amount) public view returns (boolean) {
+    function invest() public view payable {
+    	// No arguments are necessary, all
+        // information is already part of
+        // the transaction. The keyword payable
+        // is required for the function to
+        // be able to receive Ether.
+
+        // Revert the call if the investement
+        // period is over.
+        require(
+            now <= limitDate,
+            "Investement period already ended."
+        );
+	
+	uint investedAmount = msg.value;
+	
+	//----
+	    
+
+
+        //if (highestBid != 0) {
+            // Sending back the money by simply using
+            // highestBidder.send(highestBid) is a security risk
+            // because it could execute an untrusted contract.
+            // It is always safer to let the recipients
+            // withdraw their money themselves.
+            //pendingReturns[highestBidder] += highestBid;
+        //}
+        //highestBidder = msg.sender;
+        //highestBid = msg.value;
+        //emit HighestBidIncreased(msg.sender, msg.value);
 
 	}
 
