@@ -18,7 +18,6 @@ contract farminginvestment is mortal {
 
     uint milkPrice;
 
-
     uint collectedAmount;
     uint goalAmount;
     uint limitDate;
@@ -42,10 +41,14 @@ contract farminginvestment is mortal {
 
 	}
 
-    function buyCows () returns (boolean) {
+    function investmentPeriodEnd ()  {
+        require(collectedAmount == goalAmount, "Goal amount of money has not yet been collected");
+        cowBreeder.transfer(goalAmount);
+        cowsBought = true;
     }
 
-    function buyMilk(uint quantity) returns (boolean) public {
+    function buyMilk payable (uint quantity) public {
+        require (msg.value == milkPrice * quantity, "Not the right amount of money to buy that quantity of milk.");
 
     }
 
