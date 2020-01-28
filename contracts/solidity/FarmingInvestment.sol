@@ -16,6 +16,9 @@ contract farminginvestment is mortal {
     address payable cowBreeder;
     address payable farmer;
 
+    Investor[] investors;
+    uint nbInvestors;
+
     uint milkPrice;
 
     uint collectedAmount;
@@ -31,6 +34,7 @@ contract farminginvestment is mortal {
         collectedAmount = 0;
         goalAmount = _goalAmount;
         limitDate = now + duration;
+        nbInvestors = 0;
 
         cowsBought = false;
 
@@ -43,31 +47,31 @@ contract farminginvestment is mortal {
         // is required for the function to
         // be able to receive Ether.
 
-        // Revert the call if the investement
-        // period is over.
+        // Revert the call if the investement period is over.
         require(
             now <= limitDate,
             "Investement period already ended."
         );
 	
-	uint investedAmount = msg.value;
+	    uint _investedAmount = msg.value;
 	
-	//----
-	    
+	    // Vérifications que la somme ne dépasse pas le goal
+	    require(
+	        collectedAmount + _investedAmount <= goalAmount,
+	        "Contract over invested: "+goalAmount-collectedAmount+" ETH missing to complete the goal."
+	    );
 
+	    // Si tout va bien jusque la, on accepte l'investisseur donc creation de l'investisseur
+	    investors.push(Investor({investedAmount:_investedAmount, id:msg.sender}));
 
-        //if (highestBid != 0) {
-            // Sending back the money by simply using
-            // highestBidder.send(highestBid) is a security risk
-            // because it could execute an untrusted contract.
-            // It is always safer to let the recipients
-            // withdraw their money themselves.
-            //pendingReturns[highestBidder] += highestBid;
-        //}
-        //highestBidder = msg.sender;
-        //highestBid = msg.value;
-        //emit HighestBidIncreased(msg.sender, msg.value);
+	    // On met à jour les params
+	    nbInvestors = nbInvestors + 1;
+	    collectedAmount = collectedAmount + investedAmount;
 
+	    // End ?
+	    if(collectedAmount == goalAmount){
+	        investmentPeriodEnd();
+	    }
 	}
 
     function investmentPeriodEnd ()  {
