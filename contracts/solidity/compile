@@ -5,4 +5,3 @@ rm -rf ../build
 solc FarmingInvestment.sol --bin --abi --optimize -o ../build
 cd ../build
 web3j solidity generate ./farminginvestment.bin ./farminginvestment.abi -p bfm.farmer -o ../../src/main/java/
-
