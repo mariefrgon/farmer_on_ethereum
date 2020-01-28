@@ -71,13 +71,35 @@ contract farminginvestment is mortal {
 	}
 
     function investmentPeriodEnd ()  {
-        require(collectedAmount == goalAmount, "Goal amount of money has not yet been collected");
+        require(
+            collectedAmount == goalAmount,
+             "Goal amount of money has not yet been collected"
+        );
+
         cowBreeder.transfer(goalAmount);
         cowsBought = true;
     }
 
     function buyMilk payable (uint quantity) public {
-        require (msg.value == milkPrice * quantity, "Not the right amount of money to buy that quantity of milk.");
+        require (
+            msg.value == milkPrice * quantity,
+            "Not the right amount of money to buy that quantity of milk."
+        );
+
+        require (
+            cowsBought = true,
+            "Cows have not been bought yet"
+        );
+
+        //envoyer une partie au fermier
+        farmer.transfer(msg.value * 0.5)
+
+        // et une partie aux investors
+        for (uint i = 0; i < nbInvestors; i++){
+            //potentiellement problème d'approximation du calcul de la share?
+            investors[i].id.transfer((investors[i].investedAmount / goalAmount)*msg.value)
+
+        }
 
     }
 
