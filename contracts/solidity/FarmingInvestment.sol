@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.6.1;
 
 contract mortal {
     address owner;
@@ -21,7 +21,7 @@ contract farminginvestment is mortal {
     uint collectedAmount;
     uint goalAmount;
     uint limitDate;
-    boolean cowsBought;
+    bool cowsBought;
 
     constructor(address payable _cowBreeder, uint _goalAmount, uint _milkPrice, uint duration) public{
         farmer = msg.sender;
@@ -36,7 +36,7 @@ contract farminginvestment is mortal {
 
     }
 
-    function invest() public view payable {
+    function invest() public payable {
     	// No arguments are necessary, all
         // information is already part of
         // the transaction. The keyword payable
@@ -70,7 +70,7 @@ contract farminginvestment is mortal {
 
 	}
 
-    function investmentPeriodEnd ()  {
+    function investmentPeriodEnd () internal {
         require(
             collectedAmount == goalAmount,
              "Goal amount of money has not yet been collected"
@@ -80,7 +80,7 @@ contract farminginvestment is mortal {
         cowsBought = true;
     }
 
-    function buyMilk payable (uint quantity) public {
+    function buyMilk (uint quantity) public payable {
         require (
             msg.value == milkPrice * quantity,
             "Not the right amount of money to buy that quantity of milk."
@@ -92,12 +92,12 @@ contract farminginvestment is mortal {
         );
 
         //envoyer une partie au fermier
-        farmer.transfer(msg.value * 0.5)
+        farmer.transfer(msg.value * 0.5);
 
         // et une partie aux investors
         for (uint i = 0; i < nbInvestors; i++){
             //potentiellement problème d'approximation du calcul de la share?
-            investors[i].id.transfer((investors[i].investedAmount / goalAmount)*msg.value)
+            investors[i].id.transfer((investors[i].investedAmount / goalAmount)*msg.value);
 
         }
 
