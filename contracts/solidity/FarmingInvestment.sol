@@ -1,9 +1,9 @@
 pragma solidity ^0.6.1;
 
 contract mortal {
-    address owner;
-    constructor() public { owner = msg.sender; }
-    function kill() public { if (msg.sender == owner) selfdestruct(owner); }
+    address payable farmer;
+    constructor() public { farmer = msg.sender; }
+    function kill() public { if (msg.sender == farmer) selfdestruct(farmer); }
 }
 
 contract farminginvestment is mortal {
@@ -14,7 +14,6 @@ contract farminginvestment is mortal {
     }
 
     address payable cowBreeder;
-    address payable farmer;
 
     Investor[] investors;
     uint nbInvestors;
@@ -58,7 +57,7 @@ contract farminginvestment is mortal {
 	    // Vérifications que la somme ne dépasse pas le goal
 	    require(
 	        collectedAmount + _investedAmount <= goalAmount,
-	        "Contract over invested: "+goalAmount-collectedAmount+" ETH missing to complete the goal."
+	        "Contract over invested."
 	    );
 
 	    // Si tout va bien jusque la, on accepte l'investisseur donc creation de l'investisseur
@@ -66,7 +65,7 @@ contract farminginvestment is mortal {
 
 	    // On met à jour les params
 	    nbInvestors = nbInvestors + 1;
-	    collectedAmount = collectedAmount + investedAmount;
+	    collectedAmount = collectedAmount + _investedAmount;
 
 	    // End ?
 	    if(collectedAmount == goalAmount){
@@ -96,7 +95,7 @@ contract farminginvestment is mortal {
         );
 
         //envoyer une partie au fermier
-        farmer.transfer(msg.value * 0.5);
+        farmer.transfer(msg.value / 2);
 
         // et une partie aux investors
         for (uint i = 0; i < nbInvestors; i++){
