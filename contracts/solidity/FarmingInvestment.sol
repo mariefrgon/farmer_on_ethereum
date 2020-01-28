@@ -40,7 +40,7 @@ contract farminginvestment is mortal {
 
     }
 
-    function invest() public view payable {
+    function invest() public payable {
     	// No arguments are necessary, all
         // information is already part of
         // the transaction. The keyword payable
