@@ -21,8 +21,8 @@ public class Launcher {
         int cmd;
         while(true) {
             int user = ihm.promptMenu();
-            switch (user) {
-                case USERS.Investor1:
+            switch (USERS.values()[user]) {
+                case Investor1:
                     cmd = ihm.promptInvestorMenu();
                     if (cmd == 1) {
                         //TODO: montrer l'argent de la personne
@@ -33,10 +33,10 @@ public class Launcher {
                     }
 
                     break;
-                case USERS.Investor2:
+                case Investor2:
                     //TODO: same as for investor2
                     break;
-                case USERS.Client:
+                case Client:
                     //TODO: seulement permettre ça quand les vaches sont achetées (?) -> ou alors non parce que solidity s'en occupe
                     cmd = ihm.promptClientMenu();
                     if (cmd == 1) {
@@ -46,6 +46,8 @@ public class Launcher {
                         //TODO: montrer l'argent du client + investisseur + farmer
                         System.out.println("lait commandé");
                     }
+                    break;
+                default:
                     break;
             }
         }
