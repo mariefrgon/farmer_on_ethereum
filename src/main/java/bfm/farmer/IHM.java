@@ -69,6 +69,12 @@ public class IHM {
         return readCommand();
     }
 
+    public  int promptMilkAmount(){
+        String instructions = "How many bottles of milk do you want to buy?";
+        printMenu(instructions);
+        return readCommand();
+    }
+
     public void printOptionsMenu(String instructions, String[] options){
         System.out.println(instructions);
         for (int i = 0; i<options.length; i++){
