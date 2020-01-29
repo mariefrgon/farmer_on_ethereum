@@ -59,9 +59,9 @@ public class Deployer
     );
 
     private final User CLIENT = new User(
-            "TODO",
-            "TODO",
-            "root"
+            "/Users/mariefrance/Library/Ethereum/farmerchain/keystore/UTC--2020-01-29T16-17-20.101712000Z--4d19ff7da6d7a19e85c55ac9125f54ba70af2c76",
+            "0x4d19FF7da6d7A19e85C55aC9125f54bA70AF2c76",
+            "farmerpwd"
     );
 
     private final User COWBREEDER = new User(

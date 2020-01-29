@@ -16,6 +16,7 @@ public class IHM {
     //TODO: rajouter des la sécurité pour quand l'input c'est n'importe quoi (?) -> genre des check
     public void promptInitMenu(){
         String instructions = "Welcome to the Milkapp. This is a platform to be able to collect funds from investors. Then, once you have the infrastructure, you can sell milk to customers. To begin, you must deploy the smart contract.";
+        printMenu(instructions);
     }
 
     public int promptMenu(){
@@ -34,7 +35,7 @@ public class IHM {
 
     //renvoie le résultat en secondes
     public int promptMaxDuration(){
-        String instructions = "Please enter the max duration of the contract (in minutes) amount for the investment period";
+        String instructions = "Please enter the max duration for the investment period (in minutes)";
         printMenu(instructions);
         return readCommand()*60;
     }

@@ -28,7 +28,7 @@ public class Launcher {
                 case Investor1:
                     contract = deployer.getContract(contractAddress, USERS.Investor1);
                     cmd = ihm.promptInvestorMenu();
-                    if (cmd == 1) {
+                    if (cmd == 0) {
                         //TODO: montrer l'argent de la personne
                         int investmentAmount = ihm.promptAmountToInvest();
                         contract.invest(BigInteger.valueOf(investmentAmount));
@@ -39,7 +39,7 @@ public class Launcher {
                 case Investor2:
                     contract = deployer.getContract(contractAddress, USERS.Investor2);
                     cmd = ihm.promptInvestorMenu();
-                    if (cmd == 1) {
+                    if (cmd == 0) {
                         //TODO: montrer l'argent de la personne
                         int investmentAmount = ihm.promptAmountToInvest();
                         contract.invest(BigInteger.valueOf(investmentAmount));
@@ -50,9 +50,10 @@ public class Launcher {
                     //TODO: seulement permettre ça quand les vaches sont achetées (?) -> ou alors non parce que solidity s'en occupe
                     contract = deployer.getContract(contractAddress, USERS.Client);
                     cmd = ihm.promptClientMenu();
-                    if (cmd == 1) {
+                    if (cmd == 0) {
                         int milkAmount = ihm.promptMilkAmount();
                         contract = deployer.getContract(contractAddress, USERS.Client);
+                        contract.buyMilk(BigInteger.valueOf(milkAmount), BigInteger.valueOf(milkPrice*milkAmount));
                         //TODO: montrer l'argent du client + investisseur + farmer
                     }
                     break;
