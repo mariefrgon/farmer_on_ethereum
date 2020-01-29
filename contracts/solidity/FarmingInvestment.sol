@@ -4,6 +4,37 @@ contract mortal {
     address payable farmer;
     constructor() public { farmer = msg.sender; }
     function kill() public { if (msg.sender == farmer) selfdestruct(farmer); }
+    
+    //console.log
+    event LogUint(string, uint);
+    function log(string memory s , uint x) public {
+       emit LogUint(s, x);
+    }
+    
+    event LogInt(string, int);
+    function log(string memory s , int x) public {
+        LogInt(s, x);
+    }
+    
+    /*event LogBytes(string, bytes);
+    function log(string memory s , bytes x) public {
+        LogBytes(s, x);
+    }*/
+    
+    event LogBytes32(string, bytes32);
+    function log(string memory s , bytes32 x) public {
+        LogBytes32(s, x);
+    }
+
+    event LogAddress(string, address);
+    function log(string memory s , address x) public {
+        LogAddress(s, x);
+    }
+
+    event LogBool(string, bool);
+    function log(string memory s , bool x) public {
+        LogBool(s, x);
+    }
 }
 
 contract farminginvestment is mortal {
@@ -53,6 +84,7 @@ contract farminginvestment is mortal {
         );
 	
 	    uint _investedAmount = msg.value;
+        log("investedAmount: ", _investedAmount);
 	
 	    // Vérifications que la somme ne dépasse pas le goal
 	    require(
@@ -66,10 +98,12 @@ contract farminginvestment is mortal {
 	    // On met à jour les params
 	    nbInvestors = nbInvestors + 1;
 	    collectedAmount = collectedAmount + _investedAmount;
+	    log("collectedAmmount: ", collectedAmount);
 
 	    // End ?
 	    if(collectedAmount == goalAmount){
 	        investmentPeriodEnd();
+            log("reached goal: ", collectedAmount);
 	    }
 	}
 
@@ -81,6 +115,7 @@ contract farminginvestment is mortal {
 
         cowBreeder.transfer(goalAmount);
         cowsBought = true;
+        log("cows bought: ", cowsBought);
     }
 
     function buyMilk (uint quantity) public payable {
@@ -96,16 +131,14 @@ contract farminginvestment is mortal {
 
         //envoyer une partie au fermier
         farmer.transfer(msg.value / 2);
+        log("farmer: ", msg.value/2);
 
         // et une partie aux investors
         for (uint i = 0; i < nbInvestors; i++){
             //potentiellement problème d'approximation du calcul de la share?
-            investors[i].id.transfer((investors[i].investedAmount / goalAmount)*msg.value);
-
+            uint part = (((investors[i].investedAmount*10000 / goalAmount)*msg.value/2)/10000);
+            investors[i].id.transfer(part);
+            log("return on investment: ", part);
         }
-
     }
-
-
-
 }
