@@ -16,7 +16,7 @@ public class IHM {
     //TODO: rajouter des la sécurité pour quand l'input c'est n'importe quoi (?) -> genre des check
     public int promptInitMenu(){
         String instructions = "Welcome to the Milkapp. Please state your identity by typing the appropriate number";
-        String[] options = {String.valueOf(USERS.Farmer), String.valueOf(USERS.Investor1), String.valueOf(USERS.Investor1), String.valueOf(USERS.Client)} ;
+        String[] options = {String.valueOf(USERS.Farmer), String.valueOf(USERS.Investor1), String.valueOf(USERS.Investor2), String.valueOf(USERS.Client)} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }
