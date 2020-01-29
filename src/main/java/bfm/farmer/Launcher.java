@@ -8,44 +8,46 @@ public class Launcher {
 
         IHM ihm = new IHM();
 
-        int user = ihm.promptInitMenu();
+        ihm.promptInitMenu();
+        int duration = ihm.promptMaxDuration();
+        int goal = ihm.promptGoalAmount();
+        int milkPrice = ihm.promptMilkPrice();
+        //TODO: command
 
-        switch (user){
-            case USERS.Farmer:
-                //TODO: seulement le permettre une fois
-                int cmd = imh.promptFarmerMenu();
-                if (cmd == 1){
-                    int duration = ihm.promptMaxDuration();
-                    int goal = ihm.promtGoalAmount();
-                    int milkPrice = ihm.promptMilkPrice();
+        //Deployer deployer = new Deployer();
+        Farminginvestment farmerContract;
+        //farmerContract = deployer.transferContract(duration, goal, milkPrice);
 
-                    //TODO: command
-                }
+        int cmd;
+        while(true) {
+            int user = ihm.promptMenu();
+            switch (user) {
+                case USERS.Investor1:
+                    cmd = ihm.promptInvestorMenu();
+                    if (cmd == 1) {
+                        //TODO: montrer l'argent de la personne
+                        int investmentAmount = ihm.promptAmountToInvest();
+                        System.out.println("investissement");
+                        //TODO: command
+                        //TODO: montrer l'argent de la personne
+                    }
 
-                break;
-            case USERS.Investor1:
-                //TODO: seulement permettre ça quand le contract est déployé
-                int cmd = ihm.promptInvestorMenu();
-                if(cmd = 1){
-                    int investmentAmount = ihm.promptAmountToInvest();
+                    break;
+                case USERS.Investor2:
+                    //TODO: same as for investor2
+                    break;
+                case USERS.Client:
+                    //TODO: seulement permettre ça quand les vaches sont achetées (?) -> ou alors non parce que solidity s'en occupe
+                    cmd = ihm.promptClientMenu();
+                    if (cmd == 1) {
+                        int milkAmount = ihm.promptMilkAmount();
 
-                    //TODO: command
-                }
-
-                break;
-            case USERS.Investor2:
-                //TODO: same as for investor2
-                break;
-            case USERS.Client:
-                //TODO: seulement permettre ça quand les vaches sont achetées
-                int cmd = ihm.promptClientMenu();
-                if(cmf = 1){
-                    int milkAmount =promptMilkAmount();
-
-                    //TODO: command
-                    System.out.println("lait commandé");
-                }
-                break;
+                        //TODO: command
+                        //TODO: montrer l'argent du client + investisseur + farmer
+                        System.out.println("lait commandé");
+                    }
+                    break;
+            }
         }
 
         //Deployer deployer = new Deployer();

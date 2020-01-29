@@ -14,7 +14,11 @@ public class IHM {
     }
 
     //TODO: rajouter des la sécurité pour quand l'input c'est n'importe quoi (?) -> genre des check
-    public int promptInitMenu(){
+    public void promptInitMenu(){
+        String instructions = "Welcome to the Milkapp. This is a platform to be able to collect funds from investors. Then, once you have the infrastructure, you can sell milk to customers. To begin, you must deploy the smart contract.";
+    }
+
+    public int promptMenu(){
         String instructions = "Welcome to the Milkapp. Please state your identity by typing the appropriate number";
         String[] options = {String.valueOf(USERS.Farmer), String.valueOf(USERS.Investor1), String.valueOf(USERS.Investor2), String.valueOf(USERS.Client)} ;
         printOptionsMenu(instructions, options);
@@ -23,7 +27,7 @@ public class IHM {
 
     public int promptFarmerMenu(){
         String instructions = "Welcome Farmer. What do you want to do?";
-        String[] options = {"Deploy the smart contract", "Exit"} ;
+        String[] options = {"Go back"} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }
@@ -51,7 +55,7 @@ public class IHM {
 
     public int promptInvestorMenu(){
         String instructions = "Welcome Investor. What do you want to do?";
-        String[] options = {"Deploy the smart contract", "Exit"} ;
+        String[] options = {"Deploy the smart contract", "Go back"} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }
@@ -64,12 +68,12 @@ public class IHM {
 
     public  int promptClientMenu(){
         String instructions = "Welcome Client. What do you want to do?";
-        String[] options = {"Buy Milk", "Exit"} ;
+        String[] options = {"Buy Milk", "Go back"} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }
 
-    public  int promptMilkAmount(){
+    public int promptMilkAmount(){
         String instructions = "How many bottles of milk do you want to buy?";
         printMenu(instructions);
         return readCommand();
