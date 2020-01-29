@@ -1,39 +1,39 @@
-pragma solidity ^0.4.0.26;
+pragma solidity ^0.4.26;
 
 contract mortal {
     address farmer;
-    function mortal() public { farmer = msg.sender; }
+    constructor() public { farmer = msg.sender; }
     function kill() public { if (msg.sender == farmer) selfdestruct(farmer); }
     
     //console.log
     event LogUint(string, uint);
     function log(string memory s , uint x) public {
-       LogUint(s, x);
+       emit LogUint(s, x);
     }
     
     event LogInt(string, int);
     function log(string memory s , int x) public {
-        LogInt(s, x);
+        emit LogInt(s, x);
     }
     
-    event LogBytes(string, bytes);
+    /*event LogBytes(string, bytes);
     function log(string memory s , bytes x) public {
         LogBytes(s, x);
-    }
+    }*/
     
     event LogBytes32(string, bytes32);
     function log(string memory s , bytes32 x) public {
-        LogBytes32(s, x);
+        emit LogBytes32(s, x);
     }
 
     event LogAddress(string, address);
     function log(string memory s , address x) public {
-        LogAddress(s, x);
+        emit LogAddress(s, x);
     }
 
     event LogBool(string, bool);
     function log(string memory s , bool x) public {
-        LogBool(s, x);
+        emit LogBool(s, x);
     }
 }
 
@@ -56,7 +56,7 @@ contract farminginvestment is mortal {
     uint limitDate;
     bool cowsBought;
 
-    function farminginvestment(address  _cowBreeder, uint _goalAmount, uint _milkPrice, uint duration) public{
+    constructor(address _cowBreeder, uint _goalAmount, uint _milkPrice, uint duration) public{
         farmer = msg.sender;
 
         cowBreeder = _cowBreeder;
@@ -78,17 +78,19 @@ contract farminginvestment is mortal {
         // be able to receive Ether.
 
         // Revert the call if the investement period is over.
-        if(now <= limitDate){
-            log("Investement period already ended.", true);
-        }
+        require(
+            now <= limitDate,
+            "Investement period already ended."
+        );
     
         uint _investedAmount = msg.value;
         log("investedAmount: ", _investedAmount);
     
         // Vérifications que la somme ne dépasse pas le goal
-        if(collectedAmount + _investedAmount <= goalAmount){
-            log("Contract over invested.", true);
-        }
+        require(
+            collectedAmount + _investedAmount <= goalAmount,
+            "Contract over invested."
+        );
 
         // Si tout va bien jusque la, on accepte l'investisseur donc creation de l'investisseur
         investors.push(Investor({investedAmount:_investedAmount, id:msg.sender}));
@@ -106,43 +108,37 @@ contract farminginvestment is mortal {
     }
 
     function investmentPeriodEnd () internal {
-        if(collectedAmount == goalAmount){
-             log("Goal amount of money has not yet been collected", true);
-        }
+        require(
+            collectedAmount == goalAmount,
+             "Goal amount of money has not yet been collected"
+        );
 
-        if(!cowBreeder.send(goalAmount)){
-            throw;
-        }else{
+        cowBreeder.transfer(goalAmount);
         cowsBought = true;
         log("cows bought: ", cowsBought);
-        }
     }
 
     function buyMilk (uint quantity) public payable {
-        if(msg.value == milkPrice * quantity){
-            log("Not the right amount of money to buy that quantity of milk.", true);
-        }
+        require (
+            msg.value == milkPrice * quantity,
+            "Not the right amount of money to buy that quantity of milk."
+        );
 
-        if (cowsBought = true){
-            log("Cows have not been bought yet", true);
-        }
+        require (
+            cowsBought = true,
+            "Cows have not been bought yet"
+        );
 
         //envoyer une partie au fermier
-        if(!farmer.send(msg.value / 2)){
-            throw;
-        }else{
+        farmer.transfer(msg.value / 2);
         log("farmer: ", msg.value/2);
-        }
 
         // et une partie aux investors
         for (uint i = 0; i < nbInvestors; i++){
             //potentiellement problème d'approximation du calcul de la share?
             uint part = (((investors[i].investedAmount*10000 / goalAmount)*msg.value/2)/10000);
-            if(!investors[i].id.send(part)){
-                throw;
-            }else{
+            investors[i].id.transfer(part);
             log("return on investment: ", part);
-            }
         }
     }
 }
