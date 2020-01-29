@@ -1,10 +1,12 @@
 package main.java.bfm.farmer;
 
 
+import main.java.bfm.farmer.Launcher.USERS.*;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
@@ -70,7 +72,7 @@ public class Deployer
 
 
 
-    public Farminginvestment transferContract () throws Exception {
+    public Farminginvestment transferContract (int _duration, int _goalAmount, int _milkPrice) throws Exception {
 
         // Connect to local node
         Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
@@ -79,11 +81,13 @@ public class Deployer
         Credentials credentials = WalletUtils.loadCredentials(FARMER.account_pwd, FARMER.location_source_account);
 
         // Deploy the contract in the blockchain
-        return Farminginvestment.deploy(web3, credentials, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT, COWBREEDER.account, GOAL_AMOUNT, MILK_PRICE, DURATION).send();
+        return Farminginvestment.deploy(web3, credentials, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT,
+                COWBREEDER.account,
+                BigInteger.valueOf(_goalAmount), BigInteger.valueOf(_milkPrice), BigInteger.valueOf(_duration)).send();
 
         }
 
-    public Farminginvestment getContract (String contractAddress, String username) throws Exception {
+    public Farminginvestment getContract (String contractAddress, Launcher.USERS username) throws Exception {
 
         // Connect to local node
         Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
@@ -96,24 +100,24 @@ public class Deployer
 
     }
 
-    private Credentials getCredentials(String username) throws IOException, CipherException {
+    private Credentials getCredentials(Launcher.USERS username) throws IOException, CipherException {
 
         User user;
 
         switch (username){
-            case "farmer":
+            case Farmer:
                 user = FARMER;
                 break;
-            case "investor1":
+            case Investor1:
                 user = INVESTOR_1;
                 break;
-            case "investor2":
+            case Investor2:
                 user = INVESTOR_2;
                 break;
-            case "client":
+            case Client:
                 user = CLIENT;
                 break;
-            case "cowbreeder":
+            case Cowbreeder:
                 user = COWBREEDER;
                 break;
             default:
