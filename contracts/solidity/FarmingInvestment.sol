@@ -6,33 +6,33 @@ contract mortal {
     function kill() public { if (msg.sender == farmer) selfdestruct(farmer); }
     
     //console.log
-    event LogUint(string, uint);
+    event LogUint(string message, uint number);
     function log(string memory s , uint x) internal {
        emit LogUint(s, x);
     }
     
-    event LogInt(string, int);
+    event LogInt(string message, int number);
     function log(string memory s , int x) internal {
         emit LogInt(s, x);
     }
 
     
-    event LogBytes(string, bytes);
+    event LogBytes(string message, bytes number);
     function log(string memory s , bytes x) internal {
         emit LogBytes(s, x);
     }
     
-    event LogBytes32(string, bytes32);
+    event LogBytes32(string message, bytes32 number);
     function log(string memory s , bytes32 x) internal {
         emit LogBytes32(s, x);
     }
 
-    event LogAddress(string, address);
+    event LogAddress(string message, address id);
     function log(string memory s , address x) internal {
         emit LogAddress(s, x);
     }
 
-    event LogBool(string, bool);
+    event LogBool(string message, bool state);
     function log(string memory s , bool x) internal {
         emit LogBool(s, x);
     }
