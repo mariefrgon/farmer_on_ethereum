@@ -56,7 +56,7 @@ public class IHM {
 
     public int promptInvestorMenu(){
         String instructions = "Welcome Investor. What do you want to do?";
-        String[] options = {"Deploy the smart contract", "Go back"} ;
+        String[] options = {"Invest", "Go back"} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }

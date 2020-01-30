@@ -6,7 +6,9 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
@@ -100,8 +102,16 @@ public class Deployer
 
     }
 
-    private Credentials getCredentials(Launcher.USERS username) throws IOException, CipherException {
+    public String getBalance(Launcher.USERS username) throws IOException {
+        Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
+        User user = getUser(username);
+        BigInteger balance =  web3.ethGetBalance(user.account, DefaultBlockParameterName.LATEST).send().getBalance();
 
+        return balance.toString();
+
+    }
+
+    private User getUser(Launcher.USERS username){
         User user;
 
         switch (username){
@@ -123,8 +133,11 @@ public class Deployer
             default:
                 user = new User();
         };
+        return user;
+    }
 
-
+    private Credentials getCredentials(Launcher.USERS username) throws IOException, CipherException {
+        User user = getUser(username);
         return WalletUtils.loadCredentials(user.account_pwd, user.location_source_account);
     }
 }

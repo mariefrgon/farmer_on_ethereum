@@ -1,5 +1,10 @@
 package main.java.bfm.farmer;
 
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.utils.Convert;
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Launcher {
@@ -7,6 +12,13 @@ public class Launcher {
     public enum USERS {Farmer, Investor1, Investor2, Client, Cowbreeder;}
 
     public static void main(String[] args) throws Exception {
+
+        //TODO: delete this test
+        Deployer deployerr = new Deployer();
+        System.out.println("Retrieving balance from investor");
+        System.out.println("your balance in wei: " + deployerr.getBalance(USERS.Investor1));
+
+
 
         IHM ihm = new IHM();
 
@@ -29,10 +41,10 @@ public class Launcher {
                     contract = deployer.getContract(contractAddress, USERS.Investor1);
                     cmd = ihm.promptInvestorMenu();
                     if (cmd == 0) {
-                        //TODO: montrer l'argent de la personne
+                        System.out.println("your balance in wei: " + deployer.getBalance(USERS.Investor1));
                         int investmentAmount = ihm.promptAmountToInvest();
                         contract.invest(BigInteger.valueOf(investmentAmount));
-                        //TODO: montrer l'argent de la personne
+                        System.out.println("your balance in wei: " + deployer.getBalance(USERS.Investor1));
                     }
 
                     break;
