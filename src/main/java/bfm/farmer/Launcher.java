@@ -65,7 +65,7 @@ public class Launcher {
 
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
 
-                        ihm.printBalance(getContractBalance(deployer, contractAddress), "Contract");
+                        ihm.printBalance("Contract", getContractBalance(deployer, contractAddress));
 
                     }
                     else if(cmd == 1){
@@ -86,7 +86,7 @@ public class Launcher {
 
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
-                        ihm.printBalance(getContractBalance(deployer, contractAddress), "Contract");
+                        ihm.printBalance("Contract", getContractBalance(deployer, contractAddress));
                     }
                     else if(cmd == 1){
                         refundInvestors(ihm, deployer, contractAddress, USERS.Investor2);
