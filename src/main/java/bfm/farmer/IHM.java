@@ -97,7 +97,7 @@ public class IHM {
 
     //TODO: confirm if its in wei or ether
     public void confirmMilkPurchaseRequest(double price){
-        printMessage("Purchase request made for a total of " + price + "ether");
+        printMessage("Purchase request made for a total of " + price + " ether");
     }
 
     public void printBalance(USERS user, String balance) {

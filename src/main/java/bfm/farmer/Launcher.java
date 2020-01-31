@@ -64,6 +64,8 @@ public class Launcher {
                         contract.invest(doubleEtherToBigIntegerWei((investmentAmount))).send();
 
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+
+                        printContractBalance(deployer, contractAddress);
                     }
                     else if(cmd == 1){
                         refundInvestors(ihm, deployer, contractAddress);
@@ -75,13 +77,15 @@ public class Launcher {
                     cmd = ihm.promptInvestorMenu();
                     //invest
                     if (cmd == 0) {
-                        contract = deployer.getContract(contractAddress, USERS.Investor1);
+                        contract = deployer.getContract(contractAddress, USERS.Investor2);
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
                         double investmentAmount = ihm.promptAmountToInvest();
                         contract.invest(doubleEtherToBigIntegerWei((investmentAmount))).send();
 
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+
+                        printContractBalance(deployer, contractAddress);
                     }
                     else if(cmd == 1){
                         refundInvestors(ihm, deployer, contractAddress);
@@ -93,13 +97,18 @@ public class Launcher {
                     cmd = ihm.promptClientMenu();
                     if (cmd == 0) {
                         ihm.printBalance(USERS.Client, deployer.getBalance(USERS.Client));
+                        System.out.println();
+                        ihm.printBalance(USERS.Farmer, deployer.getBalance(USERS.Farmer));
+                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
                         long milkAmount = ihm.promptMilkAmount();
                         contract = deployer.getContract(contractAddress, USERS.Client);
-                        contract.buyMilk(BigInteger.valueOf(milkAmount), doubleEtherToBigIntegerWei(milkPrice*milkAmount));
+                        contract.buyMilk(BigInteger.valueOf(milkAmount), doubleEtherToBigIntegerWei(milkPrice*milkAmount)).send();
                         ihm.confirmMilkPurchaseRequest(milkPrice*milkAmount);
 
                         ihm.printBalance(USERS.Client, deployer.getBalance(USERS.Client));
+                        System.out.println();
                         ihm.printBalance(USERS.Farmer, deployer.getBalance(USERS.Farmer));
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
@@ -123,12 +132,18 @@ public class Launcher {
         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
         contract = deployer.getContract(contractAddress, USERS.Farmer);
-        contract.refund();
+        contract.refundLimitDate();
 
         ihm.confirmRefundRequest();
 
         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+    }
+
+    private static void printContractBalance(Deployer deployer, String contractId){
+        BigInteger balance = deployer.getBalance(contractId);
+        String balanceEth = Convert.fromWei(balance.toString(), Convert.Unit.ETHER).toString();
+        System.out.println("Contract balance in ether is :"+ balanceEth);
     }
 
 
