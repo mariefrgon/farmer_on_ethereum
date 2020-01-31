@@ -48,7 +48,7 @@ public class Launcher {
 
                     //refund investors
                     if(cmd == 0){
-                        refundInvestors(ihm, deployer, contractAddress);
+                        refundInvestors(ihm, deployer, contractAddress, USERS.Farmer) ;
                     }
                     break;
 
@@ -68,7 +68,7 @@ public class Launcher {
                         printContractBalance(deployer, contractAddress);
                     }
                     else if(cmd == 1){
-                        refundInvestors(ihm, deployer, contractAddress);
+                        refundInvestors(ihm, deployer, contractAddress, USERS.Investor1);
                     }
 
                     break;
@@ -88,7 +88,7 @@ public class Launcher {
                         printContractBalance(deployer, contractAddress);
                     }
                     else if(cmd == 1){
-                        refundInvestors(ihm, deployer, contractAddress);
+                        refundInvestors(ihm, deployer, contractAddress, USERS.Investor2);
                     }
                     break;
 
@@ -126,13 +126,13 @@ public class Launcher {
 
     }
 
-    private static void refundInvestors(IHM ihm, Deployer deployer, String contractAddress) throws Exception {
+    private static void refundInvestors(IHM ihm, Deployer deployer, String contractAddress, USERS user) throws Exception {
         Farminginvestment contract;
         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
-        contract = deployer.getContract(contractAddress, USERS.Farmer);
-        contract.refundLimitDate();
+        contract = deployer.getContract(contractAddress, user);
+        contract.refundLimitDate().send();
 
         ihm.confirmRefundRequest();
 
