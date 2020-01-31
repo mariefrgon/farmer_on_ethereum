@@ -6,13 +6,17 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.DefaultBlockParameterNumber;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
+import org.web3j.utils.Convert;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -50,7 +54,7 @@ public class Deployer
 
     private final User INVESTOR_1 = new User(
             "/Users/mariefrance/Library/Ethereum/farmerchain/keystore/UTC--2020-01-28T10-18-34.296735000Z--d61c41f105c06c4e9558599d5b4df1faf05deac7",
-            "0xUTC--2020-01-28T10-18-34.296735000Z--d61c41f105c06c4e9558599d5b4df1faf05deac7",
+            "0xd61c41f105c06c4e9558599d5b4df1faf05deac7",
             "farmerpwd"
     );
 
@@ -74,7 +78,7 @@ public class Deployer
 
 
 
-    public Farminginvestment transferContract (int _duration, int _goalAmount, int _milkPrice) throws Exception {
+    public Farminginvestment transferContract (BigInteger _duration, BigInteger _goalAmount, BigInteger _milkPrice) throws Exception {
 
         // Connect to local node
         Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
@@ -85,7 +89,7 @@ public class Deployer
         // Deploy the contract in the blockchain
         return Farminginvestment.deploy(web3, credentials, DefaultGasProvider.GAS_PRICE, DefaultGasProvider.GAS_LIMIT,
                 COWBREEDER.account,
-                BigInteger.valueOf(_goalAmount), BigInteger.valueOf(_milkPrice), BigInteger.valueOf(_duration)).send();
+                _goalAmount, _milkPrice, _duration).send();
 
         }
 
@@ -103,12 +107,27 @@ public class Deployer
     }
 
     public String getBalance(Launcher.USERS username) throws IOException {
-        Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
+        //Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
         User user = getUser(username);
-        BigInteger balance =  web3.ethGetBalance(user.account, DefaultBlockParameterName.LATEST).send().getBalance();
+        //BigInteger balance =  web3.ethGetBalance(user.account, DefaultBlockParameterName.LATEST).send().getBalance();
 
-        return balance.toString();
+        BigInteger balance = getBalance(user.account);
+        return Convert.fromWei(balance.toString(), Convert.Unit.ETHER).toString();
+    }
 
+    public BigInteger getBalance (String accountId) {
+        try {
+            Web3j web3 = Web3j.build(new HttpService());  // defaults to http://localhost:8545/
+
+            DefaultBlockParameter defaultBlockParameter = new DefaultBlockParameterNumber(web3.ethBlockNumber().send().getBlockNumber());
+            EthGetBalance ethGetBalance = web3.ethGetBalance (accountId, defaultBlockParameter).send();
+            if (ethGetBalance != null) {
+                return ethGetBalance.getBalance();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private User getUser(Launcher.USERS username){

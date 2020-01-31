@@ -1,6 +1,5 @@
 package main.java.bfm.farmer;
 
-import java.math.BigInteger;
 import java.util.Scanner;
 import main.java.bfm.farmer.Launcher.USERS;
 
@@ -16,7 +15,15 @@ public class IHM {
     //TODO: rajouter des la sécurité pour quand l'input c'est n'importe quoi (?) -> genre des check
     public void promptInitMenu(){
         String instructions = "Welcome to the Milkapp. This is a platform to be able to collect funds from investors. Then, once you have the infrastructure, you can sell milk to customers. To begin, you must deploy the smart contract.";
-        printMenu(instructions);
+        printMessage(instructions);
+    }
+
+    public void confirmContractDeployment(String address){
+        printMessage("The contract has been deployed at the address: "+ address);
+    }
+
+    public void printBalance(USERS user, String balance){
+        printMessage(user+"'s balance in ether is: "+ balance);
     }
 
     public int promptMenu(){
@@ -28,43 +35,43 @@ public class IHM {
 
     public int promptFarmerMenu(){
         String instructions = "Welcome Farmer. What do you want to do?";
-        String[] options = {"Go back"} ;
+        String[] options = {"Refund investor money", "Go back"} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }
 
     //renvoie le résultat en secondes
-    public int promptMaxDuration(){
+    public long promptMaxDuration(){
         String instructions = "Please enter the max duration for the investment period (in minutes)";
-        printMenu(instructions);
-        return readCommand()*60;
+        printMessage(instructions);
+        return readLong()*60;
     }
 
     //TODO: vérifier si c'est en ether ou en wei
-    public int promptGoalAmount(){
-        String instructions = "Please enter the goal amount for the investment in wei.";
-        printMenu(instructions);
-        return readCommand();
+    public long promptGoalAmount(){
+        String instructions = "Please enter the goal amount for the investment in ether.";
+        printMessage(instructions);
+        return readLong();
     }
 
     //TODO: vérifier si c'est en ether ou en wei
-    public int promptMilkPrice(){
-        String instructions = "Please enter the price of the milk that will be sold in wei.";
-        printMenu(instructions);
-        return readCommand();
+    public long promptMilkPrice(){
+        String instructions = "Please enter the price of the milk that will be sold in ether.";
+        printMessage(instructions);
+        return readLong();
     }
 
     public int promptInvestorMenu(){
         String instructions = "Welcome Investor. What do you want to do?";
-        String[] options = {"Invest", "Go back"} ;
+        String[] options = {"Invest", "Ask for investment refund", "Go back"} ;
         printOptionsMenu(instructions, options);
         return readCommand();
     }
 
-    public int promptAmountToInvest(){
-        String instructions = "Please enter the amount of money to invest in wei.";
-        printMenu(instructions);
-        return readCommand();
+    public long promptAmountToInvest(){
+        String instructions = "Please enter the amount of money to invest in ether.";
+        printMessage(instructions);
+        return readLong();
     }
 
     public  int promptClientMenu(){
@@ -74,10 +81,10 @@ public class IHM {
         return readCommand();
     }
 
-    public int promptMilkAmount(){
+    public long promptMilkAmount(){
         String instructions = "How many bottles of milk do you want to buy?";
-        printMenu(instructions);
-        return readCommand();
+        printMessage(instructions);
+        return readLong();
     }
 
     public void printOptionsMenu(String instructions, String[] options){
@@ -87,12 +94,17 @@ public class IHM {
         }
     }
 
-    public void printMenu(String instructions){
-        System.out.println(instructions);
+    public void printMessage(String message){
+        System.out.println(message);
     }
 
     private int readCommand() {
         return scanner.nextInt();
     }
+
+    private long readLong() {
+        return scanner.nextLong();
+    }
+
 }
 
