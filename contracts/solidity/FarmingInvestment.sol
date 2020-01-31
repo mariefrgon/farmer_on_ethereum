@@ -108,16 +108,6 @@ contract farminginvestment is mortal {
         
     }
 
-    function goalAmountReached() internal {
-        require(
-            collectedAmount == goalAmount,
-             "Goal amount of money has not yet been collected"
-        );
-        
-        cowBreeder.transfer(goalAmount);
-        cowsBought = true;
-        log("cows bought: ", cowsBought);
-    }
     
     function goalAmountReached() internal {
         require(
@@ -126,7 +116,7 @@ contract farminginvestment is mortal {
         );       
         
         if(!cowBreeder.send(goalAmount)){
-            refundBreederFailed();
+            refundPaymentFailed();
             log("buying cows failed", true);
         }else{
             cowsBought = true;
@@ -158,6 +148,7 @@ contract farminginvestment is mortal {
         }
     }
     
+    //appelé par fermier pour rembourser les investisseur si le temps a expiré
     function refundLimitDate() public{
         if(now > limitDate){
             for (uint i = 0; i < nbInvestors; i++){
@@ -169,7 +160,8 @@ contract farminginvestment is mortal {
         
     }
     
-    function refundBreederFailed() internal {
+    //pour le cas que le paiement à l'éleveur a échoué
+    function refundPaymentFailed() internal {
         for (uint i = 0; i < nbInvestors; i++){
             investors[i].id.transfer(investors[i].investedAmount);
             log("returned investedAmount: ", investors[i].investedAmount);
