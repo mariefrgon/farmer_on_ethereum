@@ -65,7 +65,8 @@ public class Launcher {
 
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
 
-                        printContractBalance(deployer, contractAddress);
+                        ihm.printBalance(getContractBalance(deployer, contractAddress), "Contract");
+
                     }
                     else if(cmd == 1){
                         refundInvestors(ihm, deployer, contractAddress, USERS.Investor1);
@@ -85,7 +86,7 @@ public class Launcher {
 
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
-                        printContractBalance(deployer, contractAddress);
+                        ihm.printBalance(getContractBalance(deployer, contractAddress), "Contract");
                     }
                     else if(cmd == 1){
                         refundInvestors(ihm, deployer, contractAddress, USERS.Investor2);
@@ -103,12 +104,15 @@ public class Launcher {
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
 
                         long milkAmount = ihm.promptMilkAmount();
+
+
                         contract = deployer.getContract(contractAddress, USERS.Client);
                         contract.buyMilk(BigInteger.valueOf(milkAmount), doubleEtherToBigIntegerWei(milkPrice*milkAmount)).send();
+
+
                         ihm.confirmMilkPurchaseRequest(milkPrice*milkAmount);
 
                         ihm.printBalance(USERS.Client, deployer.getBalance(USERS.Client));
-                        System.out.println();
                         ihm.printBalance(USERS.Farmer, deployer.getBalance(USERS.Farmer));
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
@@ -140,10 +144,10 @@ public class Launcher {
         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
     }
 
-    private static void printContractBalance(Deployer deployer, String contractId){
+    private static String getContractBalance(Deployer deployer, String contractId){
         BigInteger balance = deployer.getBalance(contractId);
         String balanceEth = Convert.fromWei(balance.toString(), Convert.Unit.ETHER).toString();
-        System.out.println("Contract balance in ether is :"+ balanceEth);
+       return balanceEth;
     }
 
 

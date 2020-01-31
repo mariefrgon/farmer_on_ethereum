@@ -104,6 +104,10 @@ public class IHM {
         printMessage(user + "'s balance in ether is: " + balance);
     }
 
+    public void printBalance(String user, String balance){
+        printMessage(user + "'s balance in ether is: " + balance);
+    }
+
     public void printOptionsMenu(String instructions, String[] options) {
         System.out.println(instructions);
         for (int i = 0; i < options.length; i++) {
