@@ -131,7 +131,7 @@ contract farminginvestment is mortal {
         );
 
         require (
-            cowsBought = true,
+            cowsBought == true,
             "Cows have not been bought yet"
         );
 
