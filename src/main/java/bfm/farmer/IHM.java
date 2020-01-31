@@ -18,25 +18,9 @@ public class IHM {
         printMessage(instructions);
     }
 
-    public void confirmContractDeployment(String address) {
-        printMessage("The contract has been deployed at the address: " + address);
-    }
-
-    public void confirmRefundRequest(){
-        printMessage("Refund request made");
-    }
-
-    public void confimMilkPurchase(){
-        printMessage("Thank you for your purchase.");
-    }
-
-    public void printBalance(USERS user, String balance) {
-        printMessage(user + "'s balance in ether is: " + balance);
-    }
-
     public int promptMenu() {
-        String instructions = "Welcome to the Milkapp. Please state your identity by typing the appropriate number";
-        String[] options = {String.valueOf(USERS.Farmer), String.valueOf(USERS.Investor1), String.valueOf(USERS.Investor2), String.valueOf(USERS.Client)};
+        String instructions = "\nWelcome to the Milkapp. Please state your identity by typing the appropriate number";
+        String[] options = {String.valueOf(USERS.Farmer), String.valueOf(USERS.Investor1), String.valueOf(USERS.Investor2), String.valueOf(USERS.Client), String.valueOf(USERS.Cowbreeder)};
         printOptionsMenu(instructions, options);
         return readCommand();
     }
@@ -91,7 +75,7 @@ public class IHM {
     }
 
     public long promptMilkAmount() {
-        String instructions = "How many bottles of milk do you want to buy?";
+        String instructions = "How many cartons of milk do you want to buy?";
         printMessage(instructions);
         return readLong();
     }
@@ -101,6 +85,23 @@ public class IHM {
         String[] options = {"Check my balance", "Go back"};
         printOptionsMenu(instructions, options);
         return readCommand();
+    }
+
+    public void confirmContractDeployment(String address) {
+        printMessage("The contract has been deployed at the address: " + address);
+    }
+
+    public void confirmRefundRequest(){
+        printMessage("Refund request made");
+    }
+
+    //TODO: confirm if its in wei or ether
+    public void confirmMilkPurchaseRequest(double price){
+        printMessage("Purchase request made for a total of " + price + "ether");
+    }
+
+    public void printBalance(USERS user, String balance) {
+        printMessage(user + "'s balance in ether is: " + balance);
     }
 
     public void printOptionsMenu(String instructions, String[] options) {

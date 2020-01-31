@@ -1,15 +1,23 @@
 package main.java.bfm.farmer;
 
+import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
+import rx.functions.Action1;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+
+
 public class Launcher {
 
     public enum USERS {Farmer, Investor1, Investor2, Client, Cowbreeder;}
+
 
     public static void main(String[] args) throws Exception {
 
@@ -30,6 +38,7 @@ public class Launcher {
         String contractAddress = contract.getContractAddress();
         ihm.confirmContractDeployment(contractAddress);
 
+
         int cmd;
         while(true) {
             int user = ihm.promptMenu();
@@ -39,52 +48,58 @@ public class Launcher {
 
                     //refund investors
                     if(cmd == 0){
-                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
-                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
-
-                        contract = deployer.getContract(contractAddress, USERS.Farmer);
-                        contract.refund();
-
-                        ihm.confirmRefundRequest();
-
-                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
-                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+                        refundInvestors(ihm, deployer, contractAddress);
                     }
                     break;
 
                 case Investor1:
-                    contract = deployer.getContract(contractAddress, USERS.Investor1);
                     cmd = ihm.promptInvestorMenu();
 
                     //invest
                     if (cmd == 0) {
+                        contract = deployer.getContract(contractAddress, USERS.Investor1);
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
 
                         double investmentAmount = ihm.promptAmountToInvest();
-                        contract.invest(doubleEtherToBigIntegerWei((investmentAmount)));
+                        contract.invest(doubleEtherToBigIntegerWei((investmentAmount))).send();
 
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
                     }
-                    //ask for refund
                     else if(cmd == 1){
-                        //TODO: copier coller refund
+                        refundInvestors(ihm, deployer, contractAddress);
                     }
 
                     break;
 
                 case Investor2:
-                    //TODO: copier coller investor1
+                    cmd = ihm.promptInvestorMenu();
+                    //invest
+                    if (cmd == 0) {
+                        contract = deployer.getContract(contractAddress, USERS.Investor1);
+                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+
+                        double investmentAmount = ihm.promptAmountToInvest();
+                        contract.invest(doubleEtherToBigIntegerWei((investmentAmount))).send();
+
+                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+                    }
+                    else if(cmd == 1){
+                        refundInvestors(ihm, deployer, contractAddress);
+                    }
                     break;
 
                 case Client:
-                    //TODO: seulement permettre ça quand les vaches sont achetées (?) -> ou alors non parce que solidity s'en occupe
+                    //Acheter du lait
                     cmd = ihm.promptClientMenu();
                     if (cmd == 0) {
+                        ihm.printBalance(USERS.Client, deployer.getBalance(USERS.Client));
+
                         long milkAmount = ihm.promptMilkAmount();
                         contract = deployer.getContract(contractAddress, USERS.Client);
                         contract.buyMilk(BigInteger.valueOf(milkAmount), doubleEtherToBigIntegerWei(milkPrice*milkAmount));
-                        ihm.confimMilkPurchase();
+                        ihm.confirmMilkPurchaseRequest(milkPrice*milkAmount);
 
+                        ihm.printBalance(USERS.Client, deployer.getBalance(USERS.Client));
                         ihm.printBalance(USERS.Farmer, deployer.getBalance(USERS.Farmer));
                         ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
                         ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
@@ -100,6 +115,20 @@ public class Launcher {
         }
 
 
+    }
+
+    private static void refundInvestors(IHM ihm, Deployer deployer, String contractAddress) throws Exception {
+        Farminginvestment contract;
+        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+
+        contract = deployer.getContract(contractAddress, USERS.Farmer);
+        contract.refund();
+
+        ihm.confirmRefundRequest();
+
+        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
     }
 
 
