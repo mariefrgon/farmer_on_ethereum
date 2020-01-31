@@ -12,7 +12,7 @@ public class Launcher {
     public enum USERS {Farmer, Investor1, Investor2, Client, Cowbreeder;}
 
     public static void main(String[] args) throws Exception {
-        
+
         IHM ihm = new IHM();
 
         //CREATE SMART CONTRACT
@@ -36,35 +36,46 @@ public class Launcher {
             switch (USERS.values()[user]) {
                 case Farmer:
                     cmd = ihm.promptFarmerMenu();
+
+                    //refund investors
                     if(cmd == 0){
+                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
+
                         contract = deployer.getContract(contractAddress, USERS.Farmer);
                         contract.refund();
+
+                        ihm.confirmRefundRequest();
+
+                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
                     }
+                    break;
+
                 case Investor1:
                     contract = deployer.getContract(contractAddress, USERS.Investor1);
                     cmd = ihm.promptInvestorMenu();
+
+                    //invest
                     if (cmd == 0) {
-                        //System.out.println("your balance in wei: " + deployer.getBalance(USERS.Investor1));
-                        long investmentAmount = ihm.promptAmountToInvest();
-                        contract.invest(BigInteger.valueOf(investmentAmount));
-                        //System.out.println("your balance in wei: " + deployer.getBalance(USERS.Investor1));
+                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+
+                        double investmentAmount = ihm.promptAmountToInvest();
+                        contract.invest(doubleEtherToBigIntegerWei((investmentAmount)));
+
+                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
                     }
+                    //ask for refund
                     else if(cmd == 1){
-                        contract = deployer.getContract(contractAddress, USERS.Investor1);
-                        contract.refund();
+                        //TODO: copier coller refund
                     }
 
                     break;
+
                 case Investor2:
-                    contract = deployer.getContract(contractAddress, USERS.Investor2);
-                    cmd = ihm.promptInvestorMenu();
-                    if (cmd == 0) {
-                        //TODO: montrer l'argent de la personne
-                        long investmentAmount = ihm.promptAmountToInvest();
-                        contract.invest(doubleEtherToBigIntegerWei(investmentAmount)).send();
-                        //TODO: montrer l'argent de la personne
-                    }
+                    //TODO: copier coller investor1
                     break;
+
                 case Client:
                     //TODO: seulement permettre ça quand les vaches sont achetées (?) -> ou alors non parce que solidity s'en occupe
                     cmd = ihm.promptClientMenu();
@@ -72,20 +83,22 @@ public class Launcher {
                         long milkAmount = ihm.promptMilkAmount();
                         contract = deployer.getContract(contractAddress, USERS.Client);
                         contract.buyMilk(BigInteger.valueOf(milkAmount), doubleEtherToBigIntegerWei(milkPrice*milkAmount));
-                        //TODO: montrer l'argent du client + investisseur + farmer
+                        ihm.confimMilkPurchase();
+
+                        ihm.printBalance(USERS.Farmer, deployer.getBalance(USERS.Farmer));
+                        ihm.printBalance(USERS.Investor1, deployer.getBalance(USERS.Investor1));
+                        ihm.printBalance(USERS.Investor2, deployer.getBalance(USERS.Investor2));
                     }
                     break;
-                default:
+                case Cowbreeder:
+                    cmd = ihm.promptCowbreederMenu();
+                    if(cmd == 0){
+                        ihm.printBalance(USERS.Cowbreeder, deployer.getBalance(USERS.Cowbreeder));
+                    }
                     break;
             }
         }
 
-
-
-        //Deployer deployer = new Deployer();
-        //Farminginvestment fi = deployer.transferContract();
-
-        //Farminginvestment fi2 = deployer.getContract(fi.getContractAddress(), "pete");
 
     }
 
