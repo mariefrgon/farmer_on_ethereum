@@ -118,6 +118,21 @@ contract farminginvestment is mortal {
         cowsBought = true;
         log("cows bought: ", cowsBought);
     }
+    
+    function goalAmountReached() internal {
+        require(
+            collectedAmount == goalAmount,
+             "Goal amount of money has not yet been collected"
+        );       
+        
+        if(!cowBreeder.send(goalAmount)){
+            refundBreederFailed();
+            log("buying cows failed", true);
+        }else{
+            cowsBought = true;
+            log("cows bought: ", cowsBought);
+        }
+    }
 
     function buyMilk (uint quantity) public payable {
         require (
@@ -143,13 +158,21 @@ contract farminginvestment is mortal {
         }
     }
     
-    function refund() public{
+    function refundLimitDate() public{
         if(now > limitDate){
             for (uint i = 0; i < nbInvestors; i++){
                 investors[i].id.transfer(investors[i].investedAmount);
                 log("returned investedAmount: ", investors[i].investedAmount);
             }
 
+        }
+        
+    }
+    
+    function refundBreederFailed() internal {
+        for (uint i = 0; i < nbInvestors; i++){
+            investors[i].id.transfer(investors[i].investedAmount);
+            log("returned investedAmount: ", investors[i].investedAmount);
         }
         
     }
